@@ -1,0 +1,52 @@
+.TH SNAKE 1 snake\-VERSION
+.SH NAME
+snake \- Snakes & Apples Game
+.SH SYNOPSIS
+.B snake
+.SH DESCRIPTION
+Snake is a variant of the snake/worm family of games.  The player controls a snake, avoiding the snake itself and the walls.  The player tries to direct the snake to eat apples that spawn to keep it alive and help it grow.
+
+.SH APPLE TYPES
+.TP
+.B Normal Apples
+Your standard apple, provides some nourishment and helps the snake grow.
+.TP 
+.B Juicy Apples
+A delicious treat, more satisfying than a normal apple and makes a snake grow up faster.  It will loose freshness and become a normal apple if not eaten promptly.
+.TP 
+.B Golden Apples
+A precious snack. These quickly loose their shine, becoming a juicy apple.  A snake will quickly grow and will be satiated for a while.
+.TP
+.B Rotten Apples
+Eww, a bad apple that should be avoided.  If eaten it will cause the snake to lose a segment and throw up.  The snake will need to eat something edible soon.
+.TP
+.B Poison Apples
+Should be avoid at all costs!  These apples will poison the snake, causing segment and hunger loss.  Worse still, a toxic miasma will taint other apples.  Hitting one could turn a prospective feast into a minefield.
+.TP
+.B Fermented Apples
+Slightly off, but still edible.  Sugars are being converted into alcohol making for an extra fun treat.  However, snakes are lightweights, so even just one bite will render the snake intoxicated.  The practical effect is controls are reversed until the snake sobers up.
+.TP
+.B Pure Apples
+TODO
+.TP
+.B Weeping Apples
+Don't Blink! TODO
+.TP
+.B Shy Apples
+Don't stare too long or the poor thing will run off to hide.  TODO
+.TP
+.B Amputated Segments
+Not really an apple, but in some game modes segments lost due to self-inflicted bites remain and should be avoided.  Eating the decaying segments will make the snake sick, and shorten its life.
+
+.SH STATUS EFFECTS
+.TP
+.B Drunk/Intoxicated
+An intoxicated snake will turn in the opposite direction.
+.TP
+.B Gilded
+A snake is rendered immune to the ill effects of bad apples.
+
+.SH CUSTOMIZATION
+snake is customized by creating a custom config.h and (re)compiling the source
+code. This keeps it fast, secure and simple.
+The UI is configured though uiconfig.h.

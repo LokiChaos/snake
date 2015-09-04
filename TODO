@@ -1,0 +1,101 @@
+UI
+	Variable World Size
+	Better sub-window logic
+	Dialog System
+		Handle terminal reseize
+		Generic dialog built on ncurses (vs using existing libs)
+		Pre-game Dialog
+		Post-game dialog
+			quit
+			restart
+			write out stats
+		Debug/Cheats Dialog
+			Main
+				Apple Spawn
+					Feeding location (right in front of snake)
+					Random placement
+					Specific Coordinate placement
+				Snake Props
+					Reposition
+					Length
+						Increase
+						Decrease
+						Reset
+						Set
+				Tick/Tempo
+					Speed Up
+					Slow Down
+					Reset to Default
+					Set to Minimum
+				Debug Mode Flags
+					Immunity
+				Debug Dump
+					Clean up code
+	Message Window
+		pushMessage(MsgQueue, message)
+			Message Queue in Game struct
+			FIFO Queue
+			UI pops any messages on redraw and adds to message list, and displays
+		scrollback (when paused) ??
+	Clean up Status window print code
+	Move All strings to their own .h for easy translation
+	Blink apples which close to rotting away
+		Faster blink as close to rotting away
+	Change snake head/body glyph/color based on status effect
+		eg: head becomes ? when confused
+		Blink head when effect is almost expired?
+
+Cleanup
+	Unify function naming
+		actionThing
+	Unify variable naming
+	Description var names
+	Unify configVar naming scheme
+
+Functionality
+	Save/Load game to file
+		Pick save format
+		Save/Load dialog
+	*Make Status Effect system extensible
+	randomPlace
+		Allow extra bounds to be be specified
+	Flesh-out Score calculation
+		Wall Hits -
+		Self Bites -
+		Good Apples decay -
+		Bad Apples decay +
+		Hunger +/-
+	Tweak tick tempo calc
+		debug tweakable
+		better curve
+	Hunger Mechanic
+		Post-Feeding Satiation counter.  Tick-based only, no hunger drain
+			Add Saturation value to Apple Table
+		Segment Lost on Starvation / Autotroph-mode
+		Balance hunger-logic
+			nonlinear?  maybe hungerDrain ~ len^(1/2)
+	Gilded Status
+		Add checks in badStuff
+	New Apples
+		Cluster Apples
+			Spawn 1-4 extra apples immediately around it.
+		Nitro Apples
+			Explode onDecay and destroy nearby apples
+		Fungal Apples
+			Add Rot timers to nearby apples
+			Accelerates rot timers on nearby apples
+	Apple Functions
+		Extent to Support Arg ??
+			Add per-event Args to Apple Table
+		Support for local effects (radius) needed for new apple types.
+		Purify Effect for pure apples
+			Converts "bad" apples to benign types
+			oldType->newType table?
+		Taint Effect
+			oldType->newType table?
+		Weeping Apples
+			Quantum Lock observation
+			Attacking
+		Shy Apples
+			Line-of-sight spook mechanic
+	Self-Biting Amputation mechanic

@@ -1,0 +1,14 @@
+# Ignore Object Files
+*.o
+# Ignore logs and save files
+*.log
+*.sav
+# Ignore vim swap files
+*.*.swp
+
+# Ignore customized config file.
+config.h
+uiconfig.h
+
+# Ignore debug output
+snake.dump
