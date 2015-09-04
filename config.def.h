@@ -10,10 +10,11 @@
 /* Required for Apple Table */
 #include "apples.h"
 
-/* World dimentions */
+/* World Properties ======================================================== */
 #define WORLD_WIDTH  (60)
 #define WORLD_HEIGHT (22)
 
+/* Snake Properties ======================================================== */
 /* Number of seconds a new snake starts as */
 static const int SnakeInitialLength = 5;
 
@@ -27,7 +28,7 @@ static const int OnImpactLoss = 50;
 /* Minimum segment lost on impacting a wall: 0 means factional loss-only */
 static const int OnImpactMinLoss = 10;
 
-/* Apple Properties */
+/* Apple Properties ======================================================== */
 /* Odds are N out of N0 (normal apples) */
 /* eg: N0 = 1000, 100 means 100 out of 1000 chance. */
 /* Zero means that type will never spawn. */
@@ -56,15 +57,16 @@ static const AppleStat AppleT[APPLE_LAST] = {
                NULL,        NULL,purifyApples,        NULL},
 
 	{    1,      1,      500,           -1,        1000, 25000, /* Weeping Apple */
-               NULL,        NULL,        NULL,        NULL},
+               NULL,quantumLock,        NULL,        NULL},
 
 	{   50,      1,      500,           -1,        1000,  7500, /* Shy Apple */
-               NULL,        NULL,        NULL,        NULL},
+               NULL,spookApples,        NULL,        NULL},
 
 	{    0,     -1,     1000,           -1,       -7500, -1000, /* Amputated Segment */
                NULL,        NULL,        NULL,        NULL}
 };
 
+/* Apple Spawn Values= ===================================================== */
 /* Maximum number of apples allowed to spawn */
 /* NB: Some mechanics may allow this cap to be exceeded */
 static const int AppleMaxPop = 10;
@@ -75,6 +77,7 @@ static const int AppleSpawnChance = 2000;
 /* Apple Rot Fuzz, actual apples will be +/- up to this value */
 static const int AppleRotFuzz = 100;
 
+/* Tick Values ============================================================= */
 /* Base tick unit in uS */
 static const int TickBase = 1000;
 /* Default Tick Time in multiple of TICK_BASE uS*/
@@ -86,8 +89,22 @@ static const int TickMinimum = 75;
 /* Factor to speed game up by for each apple eaten (of any type) */
 static const double TickScaleFactor = 0.5;
 
+/* Hunger Values =========================================================== */
 /* Cap on stored hunger based on snake length */
 static const int HungerPerSegment = 5000;
 /* Hunger Drail scalking factor */
 static const int HungerFactor = 5;
 
+/* Apple Effect Values ===================================================== */
+/* Golden Apple */
+static const int GildedDuration = 500;
+/* Fermented Apple */
+static const int IntoxicatedMinimum = 10;
+/* Weeping Apple */
+/* Chance an unobserved weeping apple moves, are are expressed as 1 in X */
+static const int WeepingWarpChance = 5;
+/* Chance an unobserved weeping apple strikes, odds expressed as 1 in X */
+static const int WeepingAttackChance = 5;
+static const int WeepingAttackDamage = 1;
+/* Shy Apple*/
+static const int SpookChance = 5;

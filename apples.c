@@ -57,7 +57,18 @@ purifyApples(Game *g, Apple *self) {
 */
 void
 quantumLock(Game *g, Apple *self) {
-
+		if(((self->c.y < g->snake.head->c.y) == (g->snake.dir & 1) && (g->snake.dir & 2)) ||
+		   ((self->c.x < g->snake.head->c.x) == (g->snake.dir & 1) && !(g->snake.dir & 2))) {
+			if(ONEIN(WeepingAttackChance)) {
+				trimSnake(g, WeepingAttackDamage, 0);
+				self->rot = 1;
+			}
+			else if(ONEIN(WeepingWarpChance)) {
+				placeRandomly(g, &self->c);
+			}
+			//TODO: Once random placement permits limited to subregious
+			// Limit warp to unobserved area
+		}
 
 }
 
@@ -69,12 +80,6 @@ spookApples(Game *g, Apple *self) {
 				self->rot = 1;
 
 
-}
-
-void
-angelStrike(Game *g, Apple *self) {
-	if(ONEIN(WeepingAttackChance))
-		trimSnake(g, WeepingAttackDamage, 0);
 }
 
 void
