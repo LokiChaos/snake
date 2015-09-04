@@ -1,6 +1,7 @@
 UI
 	Variable World Size
 	Better sub-window logic
+	Better re-draw logic
 	Dialog System
 		Handle terminal reseize
 		Generic dialog built on ncurses (vs using existing libs)
@@ -94,8 +95,10 @@ Functionality
 		Taint Effect
 			oldType->newType table?
 		Weeping Apples
-			Quantum Lock observation
-			Attacking
-		Shy Apples
-			Line-of-sight spook mechanic
+			Stalk vs Warp
+			Limit Attacking radius?
+		Reap Apples - remove apples in only one place
+			Dead Flag - marks an apple for reaping next turn
 	Self-Biting Amputation mechanic
+Bugs
+	Apple Type buggy and letting Amputated segments spawn

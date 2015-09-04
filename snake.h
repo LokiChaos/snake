@@ -46,6 +46,7 @@ enum SnakeStatus {EFFECT_CONFUSED,
 };
 
 enum AppleTypes  {APPLE_NORMAL,
+                  APPLE_TINY,
                   APPLE_JUICY,
                   APPLE_GOLDEN,
                   APPLE_ROTTEN,
@@ -174,6 +175,8 @@ void die(const char *, ...);
 /* Operations that may be useful externally */
 void place(Coord *, int, int);
 int placeRandomly(Game *, Coord *);
+bool inRect(Coord, Bounds);
+bool inRadius(Coord, Coord, int);
 void trimSnake(Game *, int, int);
 void snakeImpact(Game *);
 void spawnApple(Game *, int, int);

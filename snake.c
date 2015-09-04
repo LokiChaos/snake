@@ -155,6 +155,11 @@ snakeImpact(Game *g) {
 	moveSnake(g);
 }
 
+void
+transmogrifySegment(Segment *s) {
+	//spawnApple()
+	//TODO: spawn apple and remove segment
+}
 
 void
 trimSnake(Game *g, int c, int corpse) {

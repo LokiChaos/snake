@@ -23,7 +23,7 @@ static const int SnakeInitialLength = 5;
 static const bool OnImpactDie = false;
 /* Reset apple population on impact */
 static const bool OnImpactClearApples = true;
-/* Precent of snake lost on impact. 0 means fixed loss-only */
+/* Percent of snake lost on impact. 0 means fixed loss-only */
 static const int OnImpactLoss = 50;
 /* Minimum segment lost on impacting a wall: 0 means factional loss-only */
 static const int OnImpactMinLoss = 10;
@@ -36,6 +36,9 @@ static const AppleStat AppleT[APPLE_LAST] = {
    /* Odds, Growth, Rot_Time,       Rot_To, Nourishment, Score */
    /*       onSpawn,      onTick,       onEat,   onRotAway*/
 	{ 1000,      1,        0,           -1,        5000,   500, /* Normal Apple */
+               NULL,        NULL,        NULL,        NULL},
+
+	{  200,      0,        0,           -1,        3000,   250, /* Tiny Apple */
                NULL,        NULL,        NULL,        NULL},
 
 	{  100,      3,     1000, APPLE_NORMAL,       15000,  1500, /* Juicy Apple */
@@ -82,7 +85,7 @@ static const int AppleRotFuzz = 100;
 static const int TickBase = 1000;
 /* Default Tick Time in multiple of TICK_BASE uS*/
 static const int TickDefault = 200;
-/* Use dyanimc ticks? Set to false for static tick length */
+/* Use dynamic ticks? Set to false for static tick length */
 static const bool TickDynamic = true;
 /* Minimum tick length in multiples of TICK_BASE*/
 static const int TickMinimum = 75;
@@ -92,7 +95,7 @@ static const double TickScaleFactor = 0.5;
 /* Hunger Values =========================================================== */
 /* Cap on stored hunger based on snake length */
 static const int HungerPerSegment = 5000;
-/* Hunger Drail scalking factor */
+/* Hunger Drain scaling factor */
 static const int HungerFactor = 5;
 
 /* Apple Effect Values ===================================================== */
@@ -101,10 +104,15 @@ static const int GildedDuration = 500;
 /* Fermented Apple */
 static const int IntoxicatedMinimum = 10;
 /* Weeping Apple */
-/* Chance an unobserved weeping apple moves, are are expressed as 1 in X */
+/* Chance an unobserved weeping apple moves, odds are expressed as 1 in X */
 static const int WeepingWarpChance = 5;
 /* Chance an unobserved weeping apple strikes, odds expressed as 1 in X */
-static const int WeepingAttackChance = 5;
+static const int WeepingAttackChance = 100;
+/* Number of segments lost due to an attack */
 static const int WeepingAttackDamage = 1;
 /* Shy Apple*/
-static const int SpookChance = 5;
+/* Chance a shy apple being directly looked at will flee the direct gaze and
+   move to somewhere else, odds are expressed as 1 in X */
+static const int ShyMoveChance = 5;
+/* Chance a shy apple being watched will flee entiry (despawn) */
+static const int ShyFleeChance = 15;

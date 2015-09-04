@@ -25,6 +25,7 @@
 static const Glyph AppleGlyphs[APPLE_LAST] = {
 /*  Glyph,   Foreground,   Background, Attributes */
      {'A',    COLOR_RED,           -1,          0}, /* Normal Apple */
+     {'a',    COLOR_RED,           -1,          0}, /* Tiny Apple */
      {'J',    COLOR_RED,           -1,     A_BOLD}, /* Juicy Apple */
      {'A', COLOR_YELLOW,           -1,     A_BOLD}, /* Golden Apple */
      {'R',  COLOR_GREEN,           -1,          0}, /* Rotten Apple */
@@ -81,7 +82,6 @@ static const Key Keys[] = {
 	{  STATE_DEBUG,       '3',   debugToggle, {.i = DEBUG_SPECTER}},
 	{  STATE_DEBUG,       '4',   debugToggle, {.i = DEBUG_ANOREXIC}},
 	{  STATE_DEBUG,       '5',    debugSpawn,            {.i =-1}},
-	{  STATE_DEBUG,       '6',    debugSpawn,  {.i =APPLE_GOLDEN}},
 	{  STATE_DEBUG,       'p',   changeState,   {.i = STATE_GAME}},
 #endif /* DEBUG */
 	{    STATE_ANY,       'w',      dumpGame,                 {0}},
