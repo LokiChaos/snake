@@ -9,19 +9,6 @@
 #include "snake.h"
 #include "config.h"
 
-typedef struct ConvPair ConvPair;
-struct ConvPair {
-	int oldType;
-	int newType;
-	int chance;
-};
-
-static const ConvPair AppleTaint[] = {
-	{APPLE_NORMAL, APPLE_ROTTEN, 1},
-	{ APPLE_JUICY, APPLE_ROTTEN, 5},
-	{APPLE_ROTTEN, APPLE_POISON, 5}
-};
-
 /* Poison Apples taint good apples when eaten */
 void
 taintApples(Game *g, Apple *self) {
@@ -75,15 +62,29 @@ quantumLock(Game *g, Apple *self) {
 }
 
 void
-angelStrike(Game *g, Apple *self) {
-	if(ONEIN(3))
-		trimSnake(g, 10, 0);
+spookApples(Game *g, Apple *self) {
+		if((self->c.x == g->snake.head->c.x && ((self->c.y > g->snake.head->c.y) == (g->snake.dir & 1) && (g->snake.dir & 2))) ||
+		   (self->c.y == g->snake.head->c.y && ((self->c.x > g->snake.head->c.x) == (g->snake.dir & 1) && !(g->snake.dir & 2))))
+			if(ONEIN(SpookChance))
+				self->rot = 1;
+
+
 }
 
+void
+angelStrike(Game *g, Apple *self) {
+	if(ONEIN(WeepingAttackChance))
+		trimSnake(g, WeepingAttackDamage, 0);
+}
+
+void
+gildSnake(Game *g, Apple *self) {
+	g->snake.status[EFFECT_GILDED] += GildedDuration;
+}
 
 /* Fermented apples make the snake drunk when eaten. */
 void
 intoxicate(Game *g, Apple *self) {
 	/* Fresher fermented apples make the snake less drunk */
-	g->snake.status[EFFECT_CONFUSED] += MIN(10,AppleT[self->type].rot_time - self->rot);
+	g->snake.status[EFFECT_CONFUSED] += MIN(IntoxicatedMinimum, AppleT[self->type].rot_time - self->rot);
 }

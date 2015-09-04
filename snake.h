@@ -21,7 +21,7 @@
 
 #define DEBUG_MODE(G,A)   ((G >> A) & 1)
 #define DEBUG_SET(G,A)    (G | (1 << A))
-#define DEBUG_UNSET(G,A)  (G & !(1 << A))
+#define DEBUG_UNSET(G,A)  (G & ~(1 << A))
 #define DEBUG_TOGGLE(G,A) (G ^ (1 << A))
 
 enum Directions  {DIR_LEFT,
