@@ -108,6 +108,7 @@ struct Snake {
 	int length;
 	int toGrow;
 	int dir;
+	int turning;
 	int hunger;
 	int saturation;
 	int status[EFFECT_LAST];

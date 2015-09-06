@@ -204,23 +204,14 @@ printStatus(Game *g, UI *t) {
 	mvwaddstr(t->w[WIN_STATUS], 5, 1, t->status);
 	sprintf(t->status, "%16d", g->snake.hunger);
 	mvwaddstr(t->w[WIN_STATUS], 6, 1, t->status);
-	sprintf(t->status, "Direction:");
-	mvwaddstr(t->w[WIN_STATUS], 7, 1, t->status);
-	sprintf(t->status, "%16d", g->snake.dir);
-	mvwaddstr(t->w[WIN_STATUS], 8, 1, t->status);
-	sprintf(t->status, "Head:");
-	mvwaddstr(t->w[WIN_STATUS], 9, 1, t->status);
-	if(g->snake.head)
-		sprintf(t->status, "%12d, %2d", g->snake.head->c.x, g->snake.head->c.y);
-	mvwaddstr(t->w[WIN_STATUS], 10, 1, t->status);
 	sprintf(t->status, "Length:");
-	mvwaddstr(t->w[WIN_STATUS], 11, 1, t->status);
+	mvwaddstr(t->w[WIN_STATUS], 7, 1, t->status);
 	sprintf(t->status, "%16d", g->snake.length);
-	mvwaddstr(t->w[WIN_STATUS], 12, 1, t->status);
+	mvwaddstr(t->w[WIN_STATUS], 8, 1, t->status);
 	sprintf(t->status, "Apple Pop:");
-	mvwaddstr(t->w[WIN_STATUS], 13, 1, t->status);
+	mvwaddstr(t->w[WIN_STATUS], 9, 1, t->status);
 	sprintf(t->status, "%16d", g->applePop);
-	mvwaddstr(t->w[WIN_STATUS], 14, 1, t->status);
+	mvwaddstr(t->w[WIN_STATUS], 10, 1, t->status);
 
 
 

@@ -94,6 +94,18 @@ placeRandomly(Game *g, Coord *c) {
 	return true;
 }
 
+bool
+inRect(Coord c, Bounds b) {
+	return c.x >= b.x.min && c.x <=b.x.max && c.y >= b.y.min && c.y <= b.y.max;
+}
+
+bool
+inRadius(Coord c, Coord center, int rad) {
+	/* The game is orthogonal, so this more accurately represents the concept
+	   of radius on a grid */
+	return abs(c.x - center.x) + abs(c.y - center.y) <= rad;
+}
+
 int
 smartDir(Coord p, Bounds b) {
 	/* Snake should always start moving away from the two closest walls */
@@ -412,7 +424,7 @@ newGame() {
 		g->applePop = 0;
 		spawnApple(g, -1, false);
 
-		g->tick = TickBase * TickDefault;
+		g->tick = TickDefault;
 		g->turn = 0;
 		g->score = 0;
 		g->state = STATE_PREGAME;
@@ -519,6 +531,8 @@ tick (Game *g) {
 
 	g->turn++;
 
+	g->snake.turning = false;
+
 	if(!(DEBUG_MODE(g->debug, DEBUG_WAIT)))
 		moveSnake(g);
 
@@ -582,7 +596,7 @@ recalcTick(Game *g) {
 		totalApples += AppleT[i].score > 0 ? g->stats.applesEaten[i] : 0;
 
 	// TODO: Make adjustable via debug and of the form t = f(t)
-	return TickBase * MAX(TickMinimum, TickDefault - TickScaleFactor * (double)(totalApples * totalApples));
+	return MAX(TickMinimum, TickDefault - TickScaleFactor * (double)(totalApples * totalApples));
 }
 
 /* Key functions {{{ */
@@ -595,8 +609,10 @@ changeDir(Game *g, const Arg *arg) {
 	else
 		d = arg->i;
 	/* Don't let a snake turn back onto itself or to an invalid direction */
-	if(d >= 0 && d < DIR_LAST && (2 & d) != (2 & g->snake.dir))
+	if(!g->snake.turning && d >= 0 && d < DIR_LAST && (2 & d) != (2 & g->snake.dir)) {
 		g->snake.dir = d;
+		g->snake.turning = true;
+	}
 }
 
 void
@@ -667,6 +683,9 @@ main(int argc, char *argv[]) {
 	Game *game;
 	UI  *ui;
 	int key;
+	int clk;
+
+	clk = 0;
 
 	/* Pre-game Init */
 	srand(time(NULL));
@@ -684,13 +703,17 @@ main(int argc, char *argv[]) {
 		if(key != ERR)
 			doKey(game, key);
 
-		tick(game);
+		if(clk == game->tick) {
+			tick(game);
+			clk = 0;
+		}
 
 		if(game->state != STATE_QUIT)
 			redraw(game, ui);
 
+		clk++;
 		/* Wait until next cycle */
-		usleep(game->tick);
+		usleep(TickBase);
 	}
 
 	/* Post-game cleanup */
