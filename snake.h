@@ -18,6 +18,7 @@
 #define MAX(A,B) ((A > B) ? A : B)
 #define LENGTH(A) (sizeof(A)/sizeof(A[0]))
 #define ONEIN(N) (!(rand() % (N)))
+#define ODDS(A) ((rand() % (A.outOf)) < A.n)
 
 #define DEBUG_MODE(G,A)   ((G >> A) & 1)
 #define DEBUG_SET(G,A)    (G | (1 << A))
@@ -86,6 +87,13 @@ struct Bounds {
 	} y;
 };
 
+/* Odds expression */
+typedef struct Odds Odds;
+struct Odds {
+	int n;
+	int outOf;
+};
+
 /* Generic function argument */
 typedef union {
 	int i;
@@ -119,6 +127,7 @@ typedef struct Apple Apple;
 struct Apple {
 	int type;
 	int rot;
+	int dead;
 	Coord c;
 	Apple *next, *prev;
 };

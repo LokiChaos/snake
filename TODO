@@ -105,5 +105,9 @@ Functionality
 		Move at 1/N speeds vs snake.
 		Path finding
 		Escape at edge of world?
+	Change all ONEIN to ODDS()'s N in M
+	Better PRNG function
+		/dev/urandom?
 Bugs
 	Apple Type buggy and letting Amputated segments spawn
+	Fix randomPlacement

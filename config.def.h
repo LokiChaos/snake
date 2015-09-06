@@ -73,10 +73,10 @@ static const AppleStat AppleT[APPLE_LAST] = {
 /* Maximum number of apples allowed to spawn */
 /* NB: Some mechanics may allow this cap to be exceeded */
 static const int AppleMaxPop = 10;
-/* Chance 1 in X that on eating an apple a bonus one will spawn */
-static const int AppleBonusChance = 10;
-/* Chance 1 in X that an apple with spawn randomly on a tick */
-static const int AppleSpawnChance = 2000;
+/* Chance N in M that on eating an apple a bonus one will spawn */
+static const Odds AppleBonusChance = {1, 10};
+/* Chance N in M that an apple with spawn randomly on a tick */
+static const Odds AppleSpawnChance = {1, 2000};
 /* Apple Rot Fuzz, actual apples will be +/- up to this value */
 static const int AppleRotFuzz = 100;
 
@@ -104,15 +104,15 @@ static const int GildedDuration = 500;
 /* Fermented Apple */
 static const int IntoxicatedMinimum = 10;
 /* Weeping Apple */
-/* Chance an unobserved weeping apple moves, odds are expressed as 1 in X */
-static const int WeepingWarpChance = 5;
-/* Chance an unobserved weeping apple strikes, odds expressed as 1 in X */
-static const int WeepingAttackChance = 100;
+/* Chance an unobserved weeping apple moves, odds are expressed as N in M */
+static const Odds WeepingWarpChance = {1, 5};
+/* Chance an unobserved weeping apple strikes, odds expressed as N in M */
+static const Odds WeepingAttackChance = {1, 100};
 /* Number of segments lost due to an attack */
 static const int WeepingAttackDamage = 1;
 /* Shy Apple*/
 /* Chance a shy apple being directly looked at will flee the direct gaze and
-   move to somewhere else, odds are expressed as 1 in X */
-static const int ShyMoveChance = 5;
+   move to somewhere else, odds are expressed as N in M */
+static const Odds ShyMoveChance = {1, 5};
 /* Chance a shy apple being watched will flee entiry (despawn) */
-static const int ShyFleeChance = 15;
+static const Odds ShyFleeChance = {1, 15};

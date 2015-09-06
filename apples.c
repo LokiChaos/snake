@@ -59,11 +59,11 @@ void
 quantumLock(Game *g, Apple *self) {
 		if(((self->c.y < g->snake.head->c.y) == (g->snake.dir & 1) && (g->snake.dir & 2)) ||
 		   ((self->c.x < g->snake.head->c.x) == (g->snake.dir & 1) && !(g->snake.dir & 2))) {
-			if(ONEIN(WeepingAttackChance)) {
+			if(ODDS(WeepingAttackChance)) {
 				trimSnake(g, WeepingAttackDamage, 0);
 				self->rot = 1;
 			}
-			else if(ONEIN(WeepingWarpChance)) {
+			else if(ODDS(WeepingWarpChance)) {
 				placeRandomly(g, &self->c);
 			}
 			//TODO: Once random placement permits limited to subregious
@@ -76,9 +76,9 @@ void
 spookApples(Game *g, Apple *self) {
 		if((self->c.x == g->snake.head->c.x && ((self->c.y > g->snake.head->c.y) == (g->snake.dir & 1) && (g->snake.dir & 2))) ||
 		   (self->c.y == g->snake.head->c.y && ((self->c.x > g->snake.head->c.x) == (g->snake.dir & 1) && !(g->snake.dir & 2)))) {
-			if(ONEIN(ShyFleeChance))
+			if(ODDS(ShyFleeChance))
 				self->rot = 1;
-			if(ONEIN(ShyMoveChance))
+			if(ODDS(ShyMoveChance))
 				placeRandomly(g, &self->c);
 		}
 

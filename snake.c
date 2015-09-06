@@ -555,11 +555,11 @@ tick (Game *g) {
 	if(!DEBUG_MODE(g->debug, DEBUG_ANOREXIC))
 		if(checkApples(g)) {
 			/* Spawn a new apple N-1 / N times */
-			if(AppleBonusChance && !(ONEIN(AppleBonusChance)))
+			if(AppleBonusChance.n && !(ODDS(AppleBonusChance)))
 			spawnApple(g, -1, false);
 		
 			/* Spawn a new apple 1 / N times */
-			if(AppleBonusChance && ONEIN(AppleBonusChance))
+			if(AppleBonusChance.n && ODDS(AppleBonusChance))
 			spawnApple(g, -1, false);
 		}
 
@@ -574,7 +574,7 @@ tick (Game *g) {
 		g->state = STATE_LOSS;
 
 	/* Chance for random apple spawn */
-	if(AppleSpawnChance && ONEIN(AppleSpawnChance))
+	if(AppleSpawnChance.n && ODDS(AppleSpawnChance))
 		spawnApple(g, -1, false);
 
 	/* Always make sure at least one apple exists */
