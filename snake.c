@@ -87,7 +87,7 @@ placeRandomly(Game *g, Coord *c) {
 			loc++;
 
 	/* Wrap around logic */
-	loc %= valid;
+	loc %= g->world.x.max * g->world.y.max;
 	
 	/* Perform placement */
 	place(c, loc % g->world.x.max, loc / g->world.x.max);
