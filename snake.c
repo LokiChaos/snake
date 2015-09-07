@@ -97,15 +97,6 @@ placeInBounds(Game *g, Bounds b, Coord *c) {
 		if(a && inRect(a->c, r))
 			valid--;
 
-	/* If there are none, place at origin and abort */
-	if(valid < 1) {
-		place(c, g->world.x.min, g->world.y.min);
-		return false;
-	}
-
-	/* Select from the valid locaitons */
-	loc = rand() % valid;
-
 	if(!(oc = calloc(cells - valid, sizeof(int))))
 		die("Error: Failed to malloc.\n");
 
@@ -125,8 +116,20 @@ placeInBounds(Game *g, Bounds b, Coord *c) {
 
 	qsort(oc, i, sizeof(int), compare_int);
 
+	for(j = 1; j < i; j++)
+		if(oc[j-1] == oc[j])
+			valid++;
+
+	/* If there are none, place at origin and abort */
+	if(valid < 1) {
+		place(c, g->world.x.min, g->world.y.min);
+		return false;
+	}
+
+	/* Select from the valid locaitons */
+	loc = rand() % valid;
 	for(j = 0; j < i; j++)
-		loc += loc >= oc[j];
+		loc += loc >= oc[j] && (j == 0 || oc[j-1] < oc[j]);
 
 	/* Wrap around logic */
 	loc %= cells;
