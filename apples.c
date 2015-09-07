@@ -61,7 +61,7 @@ quantumLock(Game *g, Apple *self) {
 		   ((self->c.x < g->snake.head->c.x) == (g->snake.dir & 1) && !(g->snake.dir & 2))) {
 			if(ODDS(WeepingAttackChance)) {
 				trimSnake(g, WeepingAttackDamage, 0);
-				self->rot = 1;
+				self->dead = true;
 			}
 			else if(ODDS(WeepingWarpChance)) {
 				placeRandomly(g, &self->c);
@@ -77,7 +77,7 @@ spookApples(Game *g, Apple *self) {
 		if((self->c.x == g->snake.head->c.x && ((self->c.y > g->snake.head->c.y) == (g->snake.dir & 1) && (g->snake.dir & 2))) ||
 		   (self->c.y == g->snake.head->c.y && ((self->c.x > g->snake.head->c.x) == (g->snake.dir & 1) && !(g->snake.dir & 2)))) {
 			if(ODDS(ShyFleeChance))
-				self->rot = 1;
+				self->dead = true;
 			if(ODDS(ShyMoveChance))
 				placeRandomly(g, &self->c);
 		}

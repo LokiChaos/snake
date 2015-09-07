@@ -318,6 +318,9 @@ spawnApple(Game *g, int type, int ignorePopCap) {
 	/* Initalize apple rot timer */
 	a->rot = appleRotTime(a->type);
 
+	/* New Apple is alive */
+	a->dead = false;
+
 	/* Add new apple to list */
 	a->next = g->apples;
 	if(g->apples != NULL)
@@ -330,26 +333,8 @@ spawnApple(Game *g, int type, int ignorePopCap) {
 	}
 }
 
-
-void
-delistApple(Apple **head, Apple *a) {
-	/* Remove a from list */
-	if(a && a->prev)
-		a->prev->next = a->next;
-	if(a && a->next)
-		a->next->prev = a->prev;
-
-	/* If a was head of the list, make next apple the new head */
-	if(a == *head)
-		*head = a->next;
-}
-
 void
 eatApple(Game *g, Apple *a) {
-
-	/* Remove apple from list */
-	delistApple(&g->apples, a);
-	g->applePop--;
 
 	/* Process the apple's general effects */
 	g->snake.toGrow += MAX(AppleT[a->type].growth, 0);
@@ -365,16 +350,12 @@ eatApple(Game *g, Apple *a) {
 		AppleT[a->type].onEat(g, a);
 	}
 
-	/* Apple has been consumed and no longer existst */
-	free(a);
+	a->dead = true;
 }
 
 void
 rotApple(Game *g, Apple *a) {
 	Apple *na;
-
-	delistApple(&g->apples, a);
-	g->applePop--;
 
 	if(0 < AppleT[a->type].rot_to) {
 		/* Create decay product */
@@ -396,8 +377,7 @@ rotApple(Game *g, Apple *a) {
 		AppleT[a->type].onRotAway(g, a);
 	}
 
-	/* Apple has rotted away and no longer exists*/
-	free(a);
+	a->dead = true;
 }
 
 void
@@ -425,10 +405,28 @@ tickApples(Game *g) {
 void
 clearApples(Game *g) {
 	Apple *a;
+	for(a = g->apples; a; a = a->next)
+		a->dead = true;
+}
+
+void
+reapApples(Game *g) {
+	Apple *a;
 	Apple *na;
-	for(a = g->apples; a; na = a->next, free(a), a = na);
-	g->apples = NULL;
-	g->applePop = 0;
+	for(a = g->apples; a; a = na) {
+		na = a->next;
+		if(a->dead) {
+			if(a->prev)
+				a->prev->next = a->next;
+			if(a->next)
+				a->next->prev = a->prev;
+			if(a == g->apples)
+				g->apples = NULL;
+			g->applePop--;
+			free(a);
+		}
+	}
+
 }
 
 void
@@ -612,6 +610,8 @@ tick (Game *g) {
 			g->state = STATE_LOSS;
 
 	tickApples(g);
+
+	reapApples(g);
 
 	/* Game Over if the snake is gone */
 	if(!g->snake.head)
