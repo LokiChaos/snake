@@ -16,6 +16,7 @@
 
 void place(Coord *, int, int);
 int placeRandomly(Game *, Coord *);
+int placeInBounds(Game *, Bounds, Coord *);
 
 Segment *newSegment();
 Segment *newSnake(Coord, unsigned int);
@@ -59,18 +60,45 @@ place(Coord *c, int x, int y) {
 /* Sets coordinate to a random, unoccupied location */
 int
 placeRandomly(Game *g, Coord *c) {
+	return placeInBounds(g, g->world, c);
+}
+
+int
+compare_int(const void *a, const void *b) {
+	const int *ia = (const int *) a;
+	const int *ib = (const int *) b;
+	return (*ia > *ib) - (*ia < *ib);
+}
+
+int
+placeInBounds(Game *g, Bounds b, Coord *c) {
 	int valid;
+	int cells;
 	int loc;
+	int i;
+	int j;
+	int *oc;
 	Segment *s;
 	Apple *a;
+	Bounds r;
+
+	/* Mask bounds to within the world */
+	r.x.min = CONSTRAIN(g->world.x.min, b.x.min, g->world.x.max);
+	r.x.max = CONSTRAIN(g->world.x.min, b.x.max, g->world.x.max);
+	r.y.min = CONSTRAIN(g->world.y.min, b.y.min, g->world.y.max);
+	r.y.max = CONSTRAIN(g->world.y.min, b.y.max, g->world.y.max);
 
 	/* Count number of vacant locations */
-	valid = g->world.x.max * g->world.y.max;
-	for(s = g->snake.head; s; s = s->next, valid--);
-	for(a = g->apples;     a; a = a->next, valid--);
+	valid = cells = (r.x.max - r.x.min + 1) * (r.y.max - r.y.min + 1);
+	for(s = g->snake.head; s; s = s->next)
+		if(s && inRect(s->c, r))
+			valid--;
+	for(a = g->apples; a; a = a->next)
+		if(a && inRect(a->c, r))
+			valid--;
 
 	/* If there are none, place at origin and abort */
-	if(!valid) {
+	if(valid < 1) {
 		place(c, g->world.x.min, g->world.y.min);
 		return false;
 	}
@@ -78,25 +106,39 @@ placeRandomly(Game *g, Coord *c) {
 	/* Select from the valid locaitons */
 	loc = rand() % valid;
 
+	if(!(oc = calloc(cells - valid, sizeof(int))))
+		die("Error: Failed to malloc.\n");
+
+	i = 0;
+
 	/* Translate the valid location to the real coordiantes */
-	for(s = g->snake.head; s; s = s->next)
-		if(loc >= s->c.x + g->world.x.max * s->c.y)
-			loc++;
-	for(a = g->apples;     a; a = a->next)
-		if(loc >= a->c.x + g->world.x.max * a->c.y)
-			loc++;
+	for(s = g->snake.head; s && i < cells - valid; s = s->next)
+		if(s && inRect(s->c, r)) {
+			oc[i] = s->c.x - r.x.min + ((r.x.max - r.x.min + 1) * (s->c.y - r.y.min));
+			i++;
+		}
+	for(a = g->apples; a && i < cells - valid; a = a->next)
+		if(a && inRect(a->c, r)) {
+			oc[i] = a->c.x - r.x.min + ((r.x.max - r.x.min + 1) * (a->c.y - r.y.min));
+			i++;
+		}
+
+	qsort(oc, i, sizeof(int), compare_int);
+
+	for(j = 0; j < i; j++)
+		loc += loc >= oc[j];
 
 	/* Wrap around logic */
-	loc %= g->world.x.max * g->world.y.max;
-	
+	loc %= cells;
 	/* Perform placement */
-	place(c, loc % g->world.x.max, loc / g->world.x.max);
+	place(c, r.x.min + loc % (r.x.max - r.x.min + 1),
+	         r.y.min + loc / (r.x.max - r.x.min + 1));
 	return true;
 }
 
 bool
 inRect(Coord c, Bounds b) {
-	return c.x >= b.x.min && c.x <=b.x.max && c.y >= b.y.min && c.y <= b.y.max;
+	return c.x >= b.x.min && c.x <= b.x.max && c.y >= b.y.min && c.y <= b.y.max;
 }
 
 bool
@@ -411,7 +453,7 @@ newGame() {
 	if(!(g = (Game *)calloc(1, sizeof(Game)))) {
 		die("Error: Failed to create Game.\n");
 	} {
-		g->world = (Bounds){{0, WORLD_WIDTH}, {0, WORLD_HEIGHT}};
+		g->world = (Bounds){{0, WORLD_WIDTH - 1}, {0, WORLD_HEIGHT - 1}};
 		placeRandomly(g, &pos);
 		g->snake.head = newSnake(pos, SnakeInitialLength);
 		g->snake.length = SnakeInitialLength;
@@ -470,13 +512,12 @@ checkApples(Game *g) {
 bool
 checkWall(Coord *h, Bounds w, int wrap) {
 	if(wrap) {
-		h->x = h->x + (h->x < 0) * w.x.max - (h->x >= w.x.max) * w.x.max;
-		h->y = h->y + (h->y < 0) * w.y.max - (h->y >= w.y.max) * w.y.max;
+		h->x = h->x + (h->x < w.x.min) * w.x.max - (h->x > w.x.max) * w.x.max;
+		h->y = h->y + (h->y < w.y.min) * w.y.max - (h->y > w.y.max) * w.y.max;
 	}
 	else {
-		if(h->x < w.x.min || h->x >= w.x.max ||
-		   h->y < w.y.min || h->y >= w.y.max)
-				return true;
+		if(!inRect(*h, w))
+			return true;
 	}
 	return false;
 }
@@ -623,6 +664,8 @@ changeState(Game *g, const Arg *arg) {
 void
 dumpGame(Game *g, const Arg *arg) {
 /* Dumping Game to file [UGLY] {{{ */
+	Segment *s;
+	Apple *a;
 	FILE *dumpFile;
 	char outputFilename[] = "snake.dump";
 
@@ -640,7 +683,6 @@ dumpGame(Game *g, const Arg *arg) {
 	fprintf(dumpFile, "  confused = %d\n",  g->snake.status[EFFECT_CONFUSED]);
 	fprintf(dumpFile, "  gilded   = %d\n",  g->snake.status[EFFECT_GILDED]);
 	fprintf(dumpFile, "  Segments = [\n");
-	Segment *s;
 	for(s = g->snake.head; s; s = s->next) {
 		fprintf(dumpFile, "    Addr = 0x%08lX\n", (unsigned long int)s);
 		fprintf(dumpFile, "    Next = 0x%08lX\n", (unsigned long int)s->next);
@@ -650,7 +692,6 @@ dumpGame(Game *g, const Arg *arg) {
 	fprintf(dumpFile, "  ]\n");
 	fprintf(dumpFile, "]\n");
 	fprintf(dumpFile, "Apples = [\n");
-	Apple *a;
 	for(a = g->apples; a; a = a->next) {
 		if(!a)
 			break;

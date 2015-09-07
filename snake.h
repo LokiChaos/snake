@@ -19,6 +19,8 @@
 #define LENGTH(A) (sizeof(A)/sizeof(A[0]))
 #define ONEIN(N) (!(rand() % (N)))
 #define ODDS(A) ((rand() % (A.outOf)) < A.n)
+#define CONSTRAIN(A,B,C) (MIN(MAX(A, B), C))
+
 
 #define DEBUG_MODE(G,A)   ((G >> A) & 1)
 #define DEBUG_SET(G,A)    (G | (1 << A))

@@ -51,8 +51,8 @@ initUI(Bounds world) {
 	initColors();
 
 	// TODO: Smarter size & placement logic
-	t->w[WIN_UNIVERSE] = subwin(t->w[WIN_ROOT], 2 + world.y.max,  2 + world.x.max, 0, 0);
-	t->w[WIN_STATUS] =   subwin(t->w[WIN_ROOT], 2 + world.y.max, 78 - world.x.max, 0, 2 + world.x.max);
+	t->w[WIN_UNIVERSE] = subwin(t->w[WIN_ROOT], 3 + world.y.max,  3 + world.x.max, 0, 0);
+	t->w[WIN_STATUS] =   subwin(t->w[WIN_ROOT], 3 + world.y.max, 77 - world.x.max, 0, 3 + world.x.max);
 
 	printBorders(t->w[WIN_UNIVERSE]);
 	printBorders(t->w[WIN_STATUS]);
@@ -212,8 +212,6 @@ printStatus(Game *g, UI *t) {
 	mvwaddstr(t->w[WIN_STATUS], 9, 1, t->status);
 	sprintf(t->status, "%16d", g->applePop);
 	mvwaddstr(t->w[WIN_STATUS], 10, 1, t->status);
-
-
 
 	switch (g->state) {
 		case STATE_PAUSE:

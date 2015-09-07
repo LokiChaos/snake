@@ -57,9 +57,6 @@ Functionality
 	Save/Load game to file
 		Pick save format
 		Save/Load dialog
-	*Make Status Effect system extensible
-	randomPlace
-		Allow extra bounds to be be specified
 	Flesh-out Score calculation
 		Wall Hits -
 		Self Bites -
@@ -110,4 +107,3 @@ Functionality
 		/dev/urandom?
 Bugs
 	Apple Type buggy and letting Amputated segments spawn
-	Fix randomPlacement
