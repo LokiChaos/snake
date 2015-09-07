@@ -212,6 +212,11 @@ printStatus(Game *g, UI *t) {
 	mvwaddstr(t->w[WIN_STATUS], 9, 1, t->status);
 	sprintf(t->status, "%16d", g->applePop);
 	mvwaddstr(t->w[WIN_STATUS], 10, 1, t->status);
+	sprintf(t->status, "Saturation:");
+	mvwaddstr(t->w[WIN_STATUS], 11, 1, t->status);
+	sprintf(t->status, "%16d", g->snake.saturation);
+	mvwaddstr(t->w[WIN_STATUS], 12, 1, t->status);
+
 
 	switch (g->state) {
 		case STATE_PAUSE:

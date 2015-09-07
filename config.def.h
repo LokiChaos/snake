@@ -33,39 +33,39 @@ static const int OnImpactMinLoss = 10;
 /* eg: N0 = 1000, 100 means 100 out of 1000 chance. */
 /* Zero means that type will never spawn. */
 static const AppleStat AppleT[APPLE_LAST] = {
-   /* Odds, Growth, Rot_Time,       Rot_To, Nourishment, Score */
+   /* Odds, Growth, Rot_Time,       Rot_To, Nourishment, Saturation,  Score */
    /*       onSpawn,      onTick,       onEat,   onRotAway*/
-	{ 1000,      1,        0,           -1,        5000,   500, /* Normal Apple */
+	{ 1000,      1,        0,           -1,        5000,         30,    500, /* Normal Apple */
                NULL,        NULL,        NULL,        NULL},
 
-	{  200,      0,        0,           -1,        3000,   250, /* Tiny Apple */
+	{  200,      0,        0,           -1,        3000,         15,    250, /* Tiny Apple */
                NULL,        NULL,        NULL,        NULL},
 
-	{  100,      3,     1000, APPLE_NORMAL,       15000,  1500, /* Juicy Apple */
+	{  100,      3,     1000, APPLE_NORMAL,       15000,         60,   1500, /* Juicy Apple */
                NULL,        NULL,        NULL,        NULL},
 
-	{   10,      5,      750,  APPLE_JUICY,       25000,  5000, /* Golden Apple */
+	{   10,      5,      750,  APPLE_JUICY,       25000,        150,   5000, /* Golden Apple */
                NULL,        NULL,        NULL,        NULL},
 
-	{   50,     -1,      250,           -1,      -10000, -1000, /* Rotten Apple */
+	{   50,     -1,      250,           -1,      -10000,     -10000,  -1000, /* Rotten Apple */
                NULL,        NULL,        NULL,        NULL},
 
-	{   15,     -5,      250,           -1,      -15000, -5000, /* Poison Apple */
+	{   15,     -5,      250,           -1,      -15000,     -10000,  -5000, /* Poison Apple */
                NULL,        NULL, taintApples,        NULL},
 
-	{   50,      1,      300, APPLE_ROTTEN,        2500,  1000, /* Fermented Apple */
+	{   50,      1,      300, APPLE_ROTTEN,        2500,         30,   1000, /* Fermented Apple */
                NULL,        NULL,  intoxicate,        NULL},
 
-	{    5,      1,      500,           -1,        1000,  7500, /* Pure Apple */
+	{    5,      1,      500,           -1,        1000,        100,   7500, /* Pure Apple */
                NULL,        NULL,purifyApples,        NULL},
 
-	{    1,      1,      500,           -1,        1000, 25000, /* Weeping Apple */
+	{    1,      1,      500,           -1,        1000,         50,  25000, /* Weeping Apple */
                NULL,quantumLock,        NULL,        NULL},
 
-	{   50,      1,      500,           -1,        1000,  7500, /* Shy Apple */
+	{   50,      1,      500,           -1,        1000,         50,  15000, /* Shy Apple */
                NULL,spookApples,        NULL,        NULL},
 
-	{    0,     -1,     1000,           -1,       -7500, -1000, /* Amputated Segment */
+	{    0,     -1,     1000,           -1,       -7500,     -10000,  -1000, /* Amputated Segment */
                NULL,        NULL,        NULL,        NULL}
 };
 
@@ -93,6 +93,10 @@ static const int TickMinimum = 75;
 static const double TickScaleFactor = 0.5;
 
 /* Hunger Values =========================================================== */
+/* Snake's starting saturation level */
+static const int SnakeInitalSaturation = 50;
+/* Snake's maximum saturation level */
+static const int SnakeMaxSaturation = 200;
 /* Cap on stored hunger based on snake length */
 static const int HungerPerSegment = 5000;
 /* Hunger Drain scaling factor */

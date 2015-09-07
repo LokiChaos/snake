@@ -166,6 +166,7 @@ struct AppleStat {
 	int rot_time;
 	int rot_to;
 	int nourishment;
+	int saturation;
 	int score;
 	void (*onSpawn)(Game *g, Apple *self);
 	void (*onTick)(Game *g, Apple *self);
@@ -183,6 +184,7 @@ void debugToggle(Game*, const Arg *);
 void debugSpawn(Game*, const Arg *);
 
 void die(const char *, ...);
+int compareInt(const void *, const void*);
 
 /* Operations that may be useful externally */
 void place(Coord *, int, int);

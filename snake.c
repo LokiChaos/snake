@@ -50,6 +50,13 @@ die(const char *errstr, ...) {
 	exit(EXIT_FAILURE);
 }
 
+int
+compareInt(const void *a, const void *b) {
+	const int *ia = (const int *) a;
+	const int *ib = (const int *) b;
+	return (*ia > *ib) - (*ia < *ib);
+}
+
 /* Sets coordinate to specified values */
 void
 place(Coord *c, int x, int y) {
@@ -61,13 +68,6 @@ place(Coord *c, int x, int y) {
 int
 placeRandomly(Game *g, Coord *c) {
 	return placeInBounds(g, g->world, c);
-}
-
-int
-compare_int(const void *a, const void *b) {
-	const int *ia = (const int *) a;
-	const int *ib = (const int *) b;
-	return (*ia > *ib) - (*ia < *ib);
 }
 
 int
@@ -114,7 +114,7 @@ placeInBounds(Game *g, Bounds b, Coord *c) {
 			i++;
 		}
 
-	qsort(oc, i, sizeof(int), compare_int);
+	qsort(oc, i, sizeof(int), compareInt);
 
 	for(j = 1; j < i; j++)
 		if(oc[j-1] == oc[j])
@@ -340,6 +340,8 @@ eatApple(Game *g, Apple *a) {
 	g->snake.toGrow += MAX(AppleT[a->type].growth, 0);
 	g->snake.hunger += AppleT[a->type].nourishment;
 
+	g->snake.saturation = MAX(0, g->snake.saturation + AppleT[a->type].saturation);
+
 	if(AppleT[a->type].growth < 0)
 		trimSnake(g, -1 * AppleT[a->type].growth, 0);
 
@@ -372,7 +374,7 @@ rotApple(Game *g, Apple *a) {
 		g->apples = na;
 	}
 
-	/* If apple has a special action on being eaten, run it */
+	/* If apple has a special action on rotting away, run it */
 	if(AppleT[a->type].onRotAway) {
 		AppleT[a->type].onRotAway(g, a);
 	}
@@ -420,9 +422,9 @@ reapApples(Game *g) {
 				a->prev->next = a->next;
 			if(a->next)
 				a->next->prev = a->prev;
-			if(a == g->apples)
-				g->apples = NULL;
 			g->applePop--;
+			if(a == g->apples)
+				g->apples = a->next;
 			free(a);
 		}
 	}
@@ -462,6 +464,7 @@ newGame() {
 		g->snake.status[EFFECT_CONFUSED] = 0;
 		g->snake.status[EFFECT_GILDED] = 0;
 		g->snake.hunger = SnakeInitialLength * HungerPerSegment;
+		g->snake.saturation = SnakeInitalSaturation;
 		g->snake.toGrow = 0;
 
 		g->applePop = 0;
@@ -605,9 +608,12 @@ tick (Game *g) {
 			spawnApple(g, -1, false);
 		}
 
-	if(!DEBUG_MODE(g->debug, DEBUG_HUNGERLESS))
-		if(0 >= MIN(hungerCap(g->snake.length),(g->snake.hunger -= hungerDrain(g->snake.length, g->world))))
-			g->state = STATE_LOSS;
+	if(!DEBUG_MODE(g->debug, DEBUG_HUNGERLESS)) {
+		g->snake.saturation = MAX(0, g->snake.saturation - 1);
+		if(!g->snake.saturation)
+			if(0 >= MIN(hungerCap(g->snake.length),(g->snake.hunger -= hungerDrain(g->snake.length, g->world))))
+				g->state = STATE_LOSS;
+	}
 
 	tickApples(g);
 
