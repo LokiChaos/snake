@@ -110,11 +110,16 @@ static const int IntoxicatedMinimum = 10;
 /* Weeping Apple */
 /* Chance an unobserved weeping apple moves, odds are expressed as N in M */
 static const Odds WeepingWarpChance = {1, 5};
+/* Chance than when weeping apple moves it chases the snake,
+   odds are expressed as N in M */
+static const Odds WeepingChaseChance = {9, 10};
 /* Chance an unobserved weeping apple strikes, odds expressed as N in M */
-static const Odds WeepingAttackChance = {1, 100};
+static const Odds WeepingAttackChance = {1, 10};
+/* A weeping apple can only strike if within this radius of the snake's head */
+static const int WeepingAttackRange = 5;
 /* Number of segments lost due to an attack */
 static const int WeepingAttackDamage = 1;
-/* Shy Apple*/
+/* Shy Apple */
 /* Chance a shy apple being directly looked at will flee the direct gaze and
    move to somewhere else, odds are expressed as N in M */
 static const Odds ShyMoveChance = {1, 5};

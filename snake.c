@@ -151,6 +151,18 @@ inRadius(Coord c, Coord center, int rad) {
 	return abs(c.x - center.x) + abs(c.y - center.y) <= rad;
 }
 
+bool
+inView(Coord c, Coord head, int dir) {
+	return ((c.y > head.y) == (dir & 1) && (dir & 2)) ||
+	       ((c.x > head.x) == (dir & 1) && !(dir & 2));
+}
+
+bool
+inGaze(Coord c, Coord head, int dir) {
+	return (c.x == head.x && ((c.y > head.y) == (dir & 1) && (dir & 2))) ||
+	       (c.y == head.y && ((c.x > head.x) == (dir & 1) && !(dir & 2)));
+}
+
 int
 smartDir(Coord p, Bounds b) {
 	/* Snake should always start moving away from the two closest walls */

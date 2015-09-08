@@ -189,8 +189,11 @@ int compareInt(const void *, const void*);
 /* Operations that may be useful externally */
 void place(Coord *, int, int);
 int placeRandomly(Game *, Coord *);
+int placeInBounds(Game *, Bounds, Coord *);
 bool inRect(Coord, Bounds);
 bool inRadius(Coord, Coord, int);
+bool inView(Coord, Coord, int);
+bool inGaze(Coord, Coord, int);
 void trimSnake(Game *, int, int);
 void snakeImpact(Game *);
 void spawnApple(Game *, int, int);
